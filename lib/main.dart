@@ -1,3 +1,4 @@
+import 'package:flutter_ecommerce/screens/dashboard_home_screen.dart';
 import 'package:shadcn_flutter/shadcn_flutter.dart';
 
 void main() {
@@ -123,7 +124,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
               Flexible(
                 child: Padding(
                   padding: const EdgeInsets.all(16),
-                  child: InventoryScreen(),
+                  child: DashboardHomeScreen(),
                 ),
               ),
             ],
@@ -233,97 +234,6 @@ class _NavigationDrawerWidgetState extends State<NavigationDrawerWidget> {
         buildButton('Orders', Icons.shopping_cart_outlined),
         buildButton('Customers', Icons.people_outline),
         buildButton('Analytics', Icons.analytics_outlined),
-      ],
-    );
-  }
-}
-
-class InventoryScreen extends StatelessWidget {
-  const InventoryScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      spacing: 16,
-      children: [
-        Row(
-          children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text("Product Inventory"),
-                const Text(
-                  "Manage your catalog, stock levels, and pricing details.",
-                ),
-              ],
-            ),
-            const Spacer(),
-            PrimaryButton(
-              onPressed: () {},
-              leading: const Icon(Icons.add),
-              child: const Text("Add Product"),
-            ),
-          ],
-        ),
-        Row(
-          children: [
-            Expanded(
-              child: Card(
-                child: Row(
-                  spacing: 16,
-                  children: [
-                    SizedBox(
-                      width: 400,
-                      child: TextField(
-                        placeholder: const Text('Search...'),
-                        features: [
-                          InputFeature.leading(
-                            StatedWidget.builder(
-                              builder: (context, states) {
-                                if (states.hovered) {
-                                  return const Icon(Icons.search);
-                                } else {
-                                  return const Icon(
-                                    Icons.search,
-                                  ).iconMutedForeground();
-                                }
-                              },
-                            ),
-                            visibility: InputFeatureVisibility.textEmpty,
-                          ),
-                          InputFeature.clear(
-                            visibility:
-                                (InputFeatureVisibility.textNotEmpty &
-                                    InputFeatureVisibility.focused) |
-                                InputFeatureVisibility.hovered,
-                          ),
-                        ],
-                      ),
-                    ),
-                    const Spacer(),
-                    OutlineButton(
-                      onPressed: () {},
-                      child: const Text("All Categories"),
-                    ),
-                    OutlineButton(
-                      onPressed: () {},
-                      child: const Text("All Status"),
-                    ),
-                    OutlineButton(
-                      onPressed: () {},
-                      child: const Text("More Filters"),
-                    ),
-                    IconButton.outline(
-                      onPressed: () {},
-                      icon: const Icon(Icons.download_outlined),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ],
-        ),
       ],
     );
   }
