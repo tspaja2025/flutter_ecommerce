@@ -1,5 +1,86 @@
 import 'package:shadcn_flutter/shadcn_flutter.dart';
 
+class Orders {
+  final String id;
+  final String date;
+  final String customer;
+  final PaymentStatus paymentStatus;
+  final Fulfillment fulfillment;
+  final double total;
+  final Color paymentColor;
+  final Color fulfillmentColor;
+
+  const Orders({
+    required this.id,
+    required this.date,
+    required this.customer,
+    required this.paymentStatus,
+    required this.fulfillment,
+    required this.total,
+    required this.paymentColor,
+    required this.fulfillmentColor,
+  });
+}
+
+enum PaymentStatus { failed, refunded, paid }
+
+enum Fulfillment { unfulfilled, processing, shipped }
+
+class OrdersData {
+  static const orders = [
+    Orders(
+      id: "1",
+      date: 'June 16, 2026, 08:39 AM',
+      customer: 'Sarah Jenkins',
+      paymentStatus: PaymentStatus.paid,
+      fulfillment: Fulfillment.shipped,
+      total: 249.00,
+      paymentColor: Colors.green,
+      fulfillmentColor: Colors.blue,
+    ),
+    Orders(
+      id: "2",
+      date: 'June 16, 2026, 08:39 AM',
+      customer: 'Michael Thorne',
+      paymentStatus: PaymentStatus.failed,
+      fulfillment: Fulfillment.unfulfilled,
+      total: 1420.50,
+      paymentColor: Colors.red,
+      fulfillmentColor: Colors.red,
+    ),
+    Orders(
+      id: "3",
+      date: 'June 16, 2026, 08:39 AM',
+      customer: 'Eleanor vance',
+      paymentStatus: PaymentStatus.paid,
+      fulfillment: Fulfillment.processing,
+      total: 56.25,
+      paymentColor: Colors.green,
+      fulfillmentColor: Colors.orange,
+    ),
+    Orders(
+      id: "4",
+      date: 'June 16, 2026, 08:39 AM',
+      customer: 'Jameson Cook',
+      paymentStatus: PaymentStatus.refunded,
+      fulfillment: Fulfillment.shipped,
+      total: 312.00,
+      paymentColor: Colors.gray,
+      fulfillmentColor: Colors.blue,
+    ),
+    Orders(
+      id: "5",
+      date: 'June 16, 2026, 08:39 AM',
+      customer: 'Linda Wu',
+      paymentStatus: PaymentStatus.paid,
+      fulfillment: Fulfillment.shipped,
+      total: 890.99,
+      paymentColor: Colors.green,
+      fulfillmentColor: Colors.blue,
+    ),
+  ];
+}
+
 class OrdersScreen extends StatefulWidget {
   const OrdersScreen({super.key});
 
@@ -22,10 +103,10 @@ class _OrdersScreenState extends State<OrdersScreen> {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text('Orders Overview'),
+                const Text('Orders Overview').large.bold,
                 const Text(
                   'Manage and track your customer orders in real-time.',
-                ),
+                ).muted,
               ],
             ),
             const Spacer(),
@@ -82,196 +163,45 @@ class _OrdersScreenState extends State<OrdersScreen> {
                             ],
                           ),
                           // Body
-                          TableRow(
-                            cells: [
-                              buildCell('#ORD-0001'),
-                              buildCell('Jun 16, 2026, 08:39 AM'),
-                              buildCell('Sarah Jenkins'),
-                              TableCell(
-                                child: Container(
-                                  padding: const EdgeInsets.all(8),
-                                  alignment: Alignment.centerLeft,
-                                  child: Badge(
-                                    child: "Paid",
-                                    color: Colors.green,
+                          for (final order in OrdersData.orders)
+                            TableRow(
+                              cells: [
+                                buildCell(order.id),
+                                buildCell(order.date),
+                                buildCell(order.customer),
+                                TableCell(
+                                  child: Container(
+                                    padding: const EdgeInsets.all(8),
+                                    alignment: Alignment.centerLeft,
+                                    child: Badge(
+                                      child: order.paymentStatus.name,
+                                      color: order.paymentColor,
+                                    ),
                                   ),
                                 ),
-                              ),
-                              TableCell(
-                                child: Container(
-                                  padding: const EdgeInsets.all(8),
-                                  alignment: Alignment.centerLeft,
-                                  child: Badge(
-                                    child: "Shipped",
-                                    color: Colors.blue,
+                                TableCell(
+                                  child: Container(
+                                    padding: const EdgeInsets.all(8),
+                                    alignment: Alignment.centerLeft,
+                                    child: Badge(
+                                      child: order.fulfillment.name,
+                                      color: order.fulfillmentColor,
+                                    ),
                                   ),
                                 ),
-                              ),
-                              buildCell('\$249.00'),
-                              TableCell(
-                                child: Container(
-                                  padding: const EdgeInsets.all(8),
-                                  alignment: Alignment.centerRight,
-                                  child: IconButton.ghost(
-                                    onPressed: () {},
-                                    icon: const Icon(Icons.more_vert),
+                                buildCell('\$${order.total}'),
+                                TableCell(
+                                  child: Container(
+                                    padding: const EdgeInsets.all(8),
+                                    alignment: Alignment.centerRight,
+                                    child: IconButton.ghost(
+                                      onPressed: () {},
+                                      icon: const Icon(Icons.more_vert),
+                                    ),
                                   ),
                                 ),
-                              ),
-                            ],
-                          ),
-                          TableRow(
-                            cells: [
-                              buildCell('#ORD-0002'),
-                              buildCell('Jun 16, 2026, 08:39 AM'),
-                              buildCell('Michael Thorne'),
-                              TableCell(
-                                child: Container(
-                                  padding: const EdgeInsets.all(8),
-                                  alignment: Alignment.centerLeft,
-                                  child: Badge(
-                                    child: "Failed",
-                                    color: Colors.red,
-                                  ),
-                                ),
-                              ),
-                              TableCell(
-                                child: Container(
-                                  padding: const EdgeInsets.all(8),
-                                  alignment: Alignment.centerLeft,
-                                  child: Badge(
-                                    child: "Unfulfilled",
-                                    color: Colors.red,
-                                  ),
-                                ),
-                              ),
-                              buildCell('\$1,420.50'),
-                              TableCell(
-                                child: Container(
-                                  padding: const EdgeInsets.all(8),
-                                  alignment: Alignment.centerRight,
-                                  child: IconButton.ghost(
-                                    onPressed: () {},
-                                    icon: const Icon(Icons.more_vert),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                          TableRow(
-                            cells: [
-                              buildCell('#ORD-0003'),
-                              buildCell('Jun 16, 2026, 08:39 AM'),
-                              buildCell('Eleanor Vance'),
-                              TableCell(
-                                child: Container(
-                                  padding: const EdgeInsets.all(8),
-                                  alignment: Alignment.centerLeft,
-                                  child: Badge(
-                                    child: "Paid",
-                                    color: Colors.green,
-                                  ),
-                                ),
-                              ),
-                              TableCell(
-                                child: Container(
-                                  padding: const EdgeInsets.all(8),
-                                  alignment: Alignment.centerLeft,
-                                  child: Badge(
-                                    child: "Processing",
-                                    color: Colors.orange,
-                                  ),
-                                ),
-                              ),
-                              buildCell('\$56.25'),
-                              TableCell(
-                                child: Container(
-                                  padding: const EdgeInsets.all(8),
-                                  alignment: Alignment.centerRight,
-                                  child: IconButton.ghost(
-                                    onPressed: () {},
-                                    icon: const Icon(Icons.more_vert),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                          TableRow(
-                            cells: [
-                              buildCell('#ORD-0004'),
-                              buildCell('Jun 16, 2026, 08:39 AM'),
-                              buildCell('Jameson Cook'),
-                              TableCell(
-                                child: Container(
-                                  padding: const EdgeInsets.all(8),
-                                  alignment: Alignment.centerLeft,
-                                  child: Badge(
-                                    child: "Refunded",
-                                    color: Colors.gray,
-                                  ),
-                                ),
-                              ),
-                              TableCell(
-                                child: Container(
-                                  padding: const EdgeInsets.all(8),
-                                  alignment: Alignment.centerLeft,
-                                  child: Badge(
-                                    child: "Shipped",
-                                    color: Colors.blue,
-                                  ),
-                                ),
-                              ),
-                              buildCell('\$312.00'),
-                              TableCell(
-                                child: Container(
-                                  padding: const EdgeInsets.all(8),
-                                  alignment: Alignment.centerRight,
-                                  child: IconButton.ghost(
-                                    onPressed: () {},
-                                    icon: const Icon(Icons.more_vert),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                          TableRow(
-                            cells: [
-                              buildCell('#ORD-0005'),
-                              buildCell('Jun 16, 2026, 08:39 AM'),
-                              buildCell('Linda Wu'),
-                              TableCell(
-                                child: Container(
-                                  padding: const EdgeInsets.all(8),
-                                  alignment: Alignment.centerLeft,
-                                  child: Badge(
-                                    child: "Paid",
-                                    color: Colors.green,
-                                  ),
-                                ),
-                              ),
-                              TableCell(
-                                child: Container(
-                                  padding: const EdgeInsets.all(8),
-                                  alignment: Alignment.centerLeft,
-                                  child: Badge(
-                                    child: "Shipped",
-                                    color: Colors.blue,
-                                  ),
-                                ),
-                              ),
-                              buildCell('\$890.99'),
-                              TableCell(
-                                child: Container(
-                                  padding: const EdgeInsets.all(8),
-                                  alignment: Alignment.centerRight,
-                                  child: IconButton.ghost(
-                                    onPressed: () {},
-                                    icon: const Icon(Icons.more_vert),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
+                              ],
+                            ),
                         ],
                       ),
                       Container(

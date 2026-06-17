@@ -1,5 +1,83 @@
 import 'package:shadcn_flutter/shadcn_flutter.dart';
 
+class Inventory {
+  final String id;
+  final String product;
+  final String sku;
+  final String category;
+  final double price;
+  final double stockLevel;
+  final StockStatus stockStatus;
+
+  const Inventory({
+    required this.id,
+    required this.product,
+    required this.sku,
+    required this.category,
+    required this.price,
+    required this.stockLevel,
+    required this.stockStatus,
+  });
+
+  Color get stockColor {
+    switch (stockStatus) {
+      case StockStatus.inStock:
+        return Colors.green;
+      case StockStatus.lowStock:
+        return Colors.orange;
+      case StockStatus.outOfStock:
+        return Colors.gray;
+    }
+  }
+
+  String get formattedPrice => '\$${price.toStringAsFixed(2)}';
+
+  double get stockPercentage => (stockLevel / 100).clamp(0.0, 1.0);
+}
+
+enum StockStatus { outOfStock, lowStock, inStock }
+
+class InventoryData {
+  static const stock = [
+    Inventory(
+      id: "1",
+      product: 'Lunar Horizon Watch',
+      sku: 'WA-9821-LH',
+      category: 'Electronics',
+      price: 249.00,
+      stockLevel: 85.0,
+      stockStatus: StockStatus.inStock,
+    ),
+    Inventory(
+      id: "2",
+      product: 'SonicFlow Wireless',
+      sku: 'HP-2044-SF',
+      category: 'Electronics',
+      price: 189.50,
+      stockLevel: 12.0,
+      stockStatus: StockStatus.lowStock,
+    ),
+    Inventory(
+      id: "3",
+      product: 'Nexus Tab Pro',
+      sku: 'TB-4410-NX',
+      category: 'Computing',
+      price: 799.00,
+      stockLevel: 0.0,
+      stockStatus: StockStatus.outOfStock,
+    ),
+    Inventory(
+      id: "4",
+      product: 'Aura 15 Smartphone',
+      sku: 'PH-1500-AU',
+      category: 'Electronics',
+      price: 1099.00,
+      stockLevel: 51.0,
+      stockStatus: StockStatus.inStock,
+    ),
+  ];
+}
+
 class InventoryScreen extends StatefulWidget {
   const InventoryScreen({super.key});
 
@@ -22,10 +100,10 @@ class _InventoryScreenState extends State<InventoryScreen> {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text('Product Inventory'),
+                const Text('Product Inventory').large.bold,
                 const Text(
                   'Manage your catalog, stock levels, and pricing details.',
-                ),
+                ).muted,
               ],
             ),
             const Spacer(),
@@ -134,234 +212,64 @@ class _InventoryScreenState extends State<InventoryScreen> {
                           ],
                         ),
                         // Body
-                        TableRow(
-                          cells: [
-                            TableCell(
-                              child: Container(
-                                padding: const EdgeInsets.all(8),
-                                alignment: Alignment.centerLeft,
-                                child: Checkbox(
-                                  state: _state,
-                                  onChanged: (value) {
-                                    setState(() {
-                                      _state = value;
-                                    });
-                                  },
-                                ),
-                              ),
-                            ),
-                            buildCell('Lunar Horizon Watch'),
-                            buildCell('WA-9821-LH'),
-                            buildCell('Electronics'),
-                            buildCell('\$249.00'),
-                            TableCell(
-                              child: Container(
-                                padding: const EdgeInsets.all(8),
-                                alignment: Alignment.centerLeft,
-                                child: SizedBox(
-                                  width: double.infinity,
-                                  child: Progress(
-                                    progress: 85,
-                                    min: 0,
-                                    max: 100,
-                                    color: Colors.green,
+                        for (final inventory in InventoryData.stock)
+                          TableRow(
+                            cells: [
+                              TableCell(
+                                child: Container(
+                                  padding: const EdgeInsets.all(8),
+                                  alignment: Alignment.centerLeft,
+                                  child: Checkbox(
+                                    state: _state,
+                                    onChanged: (value) {
+                                      setState(() {
+                                        _state = value;
+                                      });
+                                    },
                                   ),
                                 ),
                               ),
-                            ),
-                            TableCell(
-                              child: Container(
-                                padding: const EdgeInsets.all(8),
-                                alignment: Alignment.centerLeft,
-                                child: Badge(
-                                  child: "In Stock",
-                                  color: Colors.green,
-                                ),
-                              ),
-                            ),
-                            TableCell(
-                              child: Container(
-                                padding: const EdgeInsets.all(8),
-                                alignment: Alignment.centerRight,
-                                child: IconButton.ghost(
-                                  onPressed: () {},
-                                  icon: const Icon(Icons.more_vert),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                        TableRow(
-                          cells: [
-                            TableCell(
-                              child: Container(
-                                padding: const EdgeInsets.all(8),
-                                alignment: Alignment.centerLeft,
-                                child: Checkbox(
-                                  state: _state,
-                                  onChanged: (value) {
-                                    setState(() {
-                                      _state = value;
-                                    });
-                                  },
-                                ),
-                              ),
-                            ),
-                            buildCell('SonicFlow Wireless'),
-                            buildCell('HP-2044-SF'),
-                            buildCell('Electronics'),
-                            buildCell('\$189.50'),
-                            TableCell(
-                              child: Container(
-                                padding: const EdgeInsets.all(8),
-                                alignment: Alignment.centerLeft,
-                                child: SizedBox(
-                                  width: double.infinity,
-                                  child: Progress(
-                                    progress: 12,
-                                    min: 0,
-                                    max: 100,
-                                    color: Colors.red,
+                              buildCell(inventory.product),
+                              buildCell(inventory.sku),
+                              buildCell(inventory.category),
+                              buildCell('\$${inventory.price}'),
+                              TableCell(
+                                child: Container(
+                                  padding: const EdgeInsets.all(8),
+                                  alignment: Alignment.centerLeft,
+                                  child: SizedBox(
+                                    width: double.infinity,
+                                    child: Progress(
+                                      progress: inventory.stockLevel,
+                                      min: 0,
+                                      max: 100,
+                                      color: inventory.stockColor,
+                                    ),
                                   ),
                                 ),
                               ),
-                            ),
-                            TableCell(
-                              child: Container(
-                                padding: const EdgeInsets.all(8),
-                                alignment: Alignment.centerLeft,
-                                child: Badge(
-                                  child: "Low Stock",
-                                  color: Colors.red,
-                                ),
-                              ),
-                            ),
-                            TableCell(
-                              child: Container(
-                                padding: const EdgeInsets.all(8),
-                                alignment: Alignment.centerRight,
-                                child: IconButton.ghost(
-                                  onPressed: () {},
-                                  icon: const Icon(Icons.more_vert),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                        TableRow(
-                          cells: [
-                            TableCell(
-                              child: Container(
-                                padding: const EdgeInsets.all(8),
-                                alignment: Alignment.centerLeft,
-                                child: Checkbox(
-                                  state: _state,
-                                  onChanged: (value) {
-                                    setState(() {
-                                      _state = value;
-                                    });
-                                  },
-                                ),
-                              ),
-                            ),
-                            buildCell('Nexus Tab Pro'),
-                            buildCell('TB-4410-NX'),
-                            buildCell('Computing'),
-                            buildCell('\$799.00'),
-                            TableCell(
-                              child: Container(
-                                padding: const EdgeInsets.all(8),
-                                alignment: Alignment.centerLeft,
-                                child: SizedBox(
-                                  width: double.infinity,
-                                  child: Progress(
-                                    progress: 0,
-                                    min: 0,
-                                    max: 100,
-                                    color: Colors.gray,
+                              TableCell(
+                                child: Container(
+                                  padding: const EdgeInsets.all(8),
+                                  alignment: Alignment.centerLeft,
+                                  child: Badge(
+                                    label: inventory.stockStatus.name,
+                                    color: inventory.stockColor,
                                   ),
                                 ),
                               ),
-                            ),
-                            TableCell(
-                              child: Container(
-                                padding: const EdgeInsets.all(8),
-                                alignment: Alignment.centerLeft,
-                                child: Badge(
-                                  child: "Out of Stock",
-                                  color: Colors.gray,
-                                ),
-                              ),
-                            ),
-                            TableCell(
-                              child: Container(
-                                padding: const EdgeInsets.all(8),
-                                alignment: Alignment.centerRight,
-                                child: IconButton.ghost(
-                                  onPressed: () {},
-                                  icon: const Icon(Icons.more_vert),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                        TableRow(
-                          cells: [
-                            TableCell(
-                              child: Container(
-                                padding: const EdgeInsets.all(8),
-                                alignment: Alignment.centerLeft,
-                                child: Checkbox(
-                                  state: _state,
-                                  onChanged: (value) {
-                                    setState(() {
-                                      _state = value;
-                                    });
-                                  },
-                                ),
-                              ),
-                            ),
-                            buildCell('Aura 15 Smartphone'),
-                            buildCell('PH-1500-AU'),
-                            buildCell('Electronics'),
-                            buildCell('\$1,099.00'),
-                            TableCell(
-                              child: Container(
-                                padding: const EdgeInsets.all(8),
-                                alignment: Alignment.centerLeft,
-                                child: SizedBox(
-                                  width: double.infinity,
-                                  child: Progress(
-                                    progress: 45,
-                                    min: 0,
-                                    max: 100,
-                                    color: Colors.orange,
+                              TableCell(
+                                child: Container(
+                                  padding: const EdgeInsets.all(8),
+                                  alignment: Alignment.centerRight,
+                                  child: IconButton.ghost(
+                                    onPressed: () {},
+                                    icon: const Icon(Icons.more_vert),
                                   ),
                                 ),
                               ),
-                            ),
-                            TableCell(
-                              child: Container(
-                                padding: const EdgeInsets.all(8),
-                                alignment: Alignment.centerLeft,
-                                child: Badge(
-                                  child: "In Stock",
-                                  color: Colors.orange,
-                                ),
-                              ),
-                            ),
-                            TableCell(
-                              child: Container(
-                                padding: const EdgeInsets.all(8),
-                                alignment: Alignment.centerRight,
-                                child: IconButton.ghost(
-                                  onPressed: () {},
-                                  icon: const Icon(Icons.more_vert),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
+                            ],
+                          ),
                       ],
                     ),
                     Container(
@@ -415,20 +323,34 @@ class _InventoryScreenState extends State<InventoryScreen> {
 }
 
 class Badge extends StatelessWidget {
-  final String child;
+  final String label;
   final Color color;
+  final bool outlined;
 
-  const Badge({super.key, required this.child, required this.color});
+  const Badge({
+    super.key,
+    required this.label,
+    required this.color,
+    this.outlined = false,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: color,
+        color: outlined ? null : color.withValues(alpha: 0.8),
+        border: outlined ? Border.all(color: color) : null,
         borderRadius: BorderRadius.circular(4),
       ),
       padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
-      child: Text(child, style: TextStyle(color: Colors.white)).xSmall,
+      child: Text(
+        label,
+        style: TextStyle(
+          color: outlined ? color : Colors.white,
+          fontSize: 12,
+          fontWeight: FontWeight.w500,
+        ),
+      ),
     );
   }
 }

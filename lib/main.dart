@@ -1,4 +1,4 @@
-import 'package:flutter_ecommerce/screens/dashboard_home_screen.dart';
+import 'package:flutter_ecommerce/screens/settings_screen.dart';
 import 'package:shadcn_flutter/shadcn_flutter.dart';
 
 void main() {
@@ -18,32 +18,6 @@ class FlutterEcommerceApp extends StatelessWidget {
     );
   }
 }
-
-class ExampleDestination {
-  const ExampleDestination(this.label, this.icon, this.selectedIcon);
-
-  final String label;
-  final Widget icon;
-  final Widget selectedIcon;
-}
-
-const List<ExampleDestination> destinations = <ExampleDestination>[
-  ExampleDestination(
-    'Messages',
-    Icon(Icons.widgets_outlined),
-    Icon(Icons.widgets),
-  ),
-  ExampleDestination(
-    'Profile',
-    Icon(Icons.format_paint_outlined),
-    Icon(Icons.format_paint),
-  ),
-  ExampleDestination(
-    'Settings',
-    Icon(Icons.settings_outlined),
-    Icon(Icons.settings),
-  ),
-];
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
@@ -124,7 +98,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
               Flexible(
                 child: Padding(
                   padding: const EdgeInsets.all(16),
-                  child: DashboardHomeScreen(),
+                  child: SettingsScreen(),
                 ),
               ),
             ],

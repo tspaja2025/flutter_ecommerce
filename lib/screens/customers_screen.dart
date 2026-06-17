@@ -1,6 +1,64 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:shadcn_flutter/shadcn_flutter.dart';
 
+class Customers {
+  final String id;
+  final String name;
+  final String email;
+  final double total;
+  final double orders;
+  final String lastPurchase;
+
+  const Customers({
+    required this.id,
+    required this.name,
+    required this.email,
+    required this.total,
+    required this.orders,
+    required this.lastPurchase,
+  });
+
+  String get formattedTotal => '\$${total.toStringAsFixed(2)}';
+  String get formattedOrders => orders.toStringAsFixed(2);
+}
+
+class CustomersData {
+  static const customer = [
+    Customers(
+      id: "1",
+      name: 'Jane Doe',
+      email: 'jane.doe@company.com',
+      total: 12450.00,
+      orders: 45.0,
+      lastPurchase: '2 hours ago',
+    ),
+    Customers(
+      id: "2",
+      name: 'Marcus Smith',
+      email: 'marcus.smith@company.com',
+      total: 8210.50,
+      orders: 21.0,
+      lastPurchase: 'Yesterday',
+    ),
+    Customers(
+      id: "3",
+      name: 'Elena Lopez',
+      email: 'elena.lopez@company.com',
+      total: 3150.00,
+      orders: 9.0,
+      lastPurchase: 'Jan 12, 2026',
+    ),
+    Customers(
+      id: "4",
+      name: 'Tom Wilson',
+      email: 'tom.wilson@company.com',
+      total: 450.25,
+      orders: 2.0,
+      lastPurchase: 'Dec 20, 2025',
+    ),
+  ];
+}
+
 class CustomersScreen extends StatefulWidget {
   const CustomersScreen({super.key});
 
@@ -11,6 +69,15 @@ class CustomersScreen extends StatefulWidget {
 class _CustomersScreenState extends State<CustomersScreen> {
   int page = 1;
 
+  final Map<String, double> acquisitionData = {
+    'Organic': 40,
+    'Paid': 30,
+    'Referral': 15,
+    'Social': 15,
+  };
+
+  final List<double> retentionData = [75, 80, 78, 85, 82, 88];
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -20,10 +87,10 @@ class _CustomersScreenState extends State<CustomersScreen> {
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text('Customer Insights'),
+            const Text('Customer Insights').large.bold,
             const Text(
               'Manage and analyze your global customer base and lifetime value.',
-            ),
+            ).muted,
           ],
         ),
         Row(
@@ -88,42 +155,16 @@ class _CustomersScreenState extends State<CustomersScreen> {
                               ],
                             ),
                             // Body
-                            TableRow(
-                              cells: [
-                                buildCell('Jane Doe'),
-                                buildCell('jane.doe@example.com'),
-                                buildCell('\$12,450.00'),
-                                buildCell('45'),
-                                buildCell('2 hours ago'),
-                              ],
-                            ),
-                            TableRow(
-                              cells: [
-                                buildCell('Marcus Smith'),
-                                buildCell('marcus.smith@example.com'),
-                                buildCell('\$8,210.50'),
-                                buildCell('21'),
-                                buildCell('Yesterday'),
-                              ],
-                            ),
-                            TableRow(
-                              cells: [
-                                buildCell('Elena Lopez'),
-                                buildCell('elena.lopez@example.com'),
-                                buildCell('\$3,150.00'),
-                                buildCell('9'),
-                                buildCell('Jan 12, 2026'),
-                              ],
-                            ),
-                            TableRow(
-                              cells: [
-                                buildCell('Tom Wilson'),
-                                buildCell('tom.wilson@example.com'),
-                                buildCell('\$450.25'),
-                                buildCell('2'),
-                                buildCell('Dex 20, 2025'),
-                              ],
-                            ),
+                            for (final customer in CustomersData.customer)
+                              TableRow(
+                                cells: [
+                                  buildCell(customer.name),
+                                  buildCell(customer.email),
+                                  buildCell(customer.formattedTotal),
+                                  buildCell(customer.formattedOrders),
+                                  buildCell(customer.lastPurchase),
+                                ],
+                              ),
                           ],
                         ),
                         Container(
@@ -162,7 +203,7 @@ class _CustomersScreenState extends State<CustomersScreen> {
                       children: [
                         const Text("Customer Acquisition"),
                         const SizedBox(height: 8),
-                        PieChartSample(),
+                        PieChartSample(data: acquisitionData),
                       ],
                     ),
                   ),
@@ -172,7 +213,7 @@ class _CustomersScreenState extends State<CustomersScreen> {
                       children: [
                         const Text("Retention Rate"),
                         const SizedBox(height: 8),
-                        BarChartSample(),
+                        BarChartSample(data: retentionData),
                       ],
                     ),
                   ),
@@ -206,188 +247,106 @@ class _CustomersScreenState extends State<CustomersScreen> {
   }
 }
 
-class PieChartSample extends StatefulWidget {
-  const PieChartSample({super.key});
+class PieChartSample extends StatelessWidget {
+  final Map<String, double> data;
 
-  @override
-  State<PieChartSample> createState() => _PieChartSampleState();
-}
+  const PieChartSample({super.key, required this.data});
 
-class _PieChartSampleState extends State<PieChartSample> {
   @override
   Widget build(BuildContext context) {
-    return AspectRatio(
-      aspectRatio: 1.3,
-      child: Row(
-        children: <Widget>[
-          const SizedBox(height: 18),
-          Expanded(
-            child: AspectRatio(
-              aspectRatio: 1,
-              child: PieChart(
-                PieChartData(
-                  borderData: FlBorderData(show: false),
-                  sectionsSpace: 0,
-                  centerSpaceRadius: 40,
-                  sections: showingSections(),
-                ),
+    final colors = [
+      Theme.of(context).colorScheme.primary,
+      Colors.green,
+      Colors.orange,
+      Colors.red,
+    ];
+
+    return SizedBox(
+      height: 200,
+      child: PieChart(
+        PieChartData(
+          borderData: FlBorderData(show: false),
+          sectionsSpace: 2,
+          centerSpaceRadius: 40,
+          sections: data.entries.toList().asMap().entries.map((entry) {
+            final index = entry.key;
+            final entryData = entry.value;
+            return PieChartSectionData(
+              color: colors[index % colors.length],
+              value: entryData.value,
+              title: '${entryData.value.toInt()}%',
+              radius: 50,
+              titleStyle: const TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
               ),
-            ),
-          ),
-          const Column(
-            mainAxisAlignment: MainAxisAlignment.end,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Indicator(color: Colors.blue, text: 'First', isSquare: true),
-              SizedBox(height: 4),
-              Indicator(color: Colors.orange, text: 'Second', isSquare: true),
-              SizedBox(height: 4),
-              Indicator(color: Colors.purple, text: 'Third', isSquare: true),
-              SizedBox(height: 4),
-              Indicator(color: Colors.green, text: 'Fourth', isSquare: true),
-              SizedBox(height: 18),
-            ],
-          ),
-          const SizedBox(width: 28),
-        ],
+            );
+          }).toList(),
+        ),
       ),
     );
   }
-
-  List<PieChartSectionData> showingSections() {
-    return List.generate(4, (i) {
-      const shadows = [Shadow(color: Colors.black, blurRadius: 2)];
-      return switch (i) {
-        0 => PieChartSectionData(
-          color: Colors.blue,
-          value: 40,
-          title: '40%',
-          radius: 50.0,
-          titleStyle: TextStyle(
-            fontSize: 16.0,
-            fontWeight: FontWeight.bold,
-            shadows: shadows,
-          ),
-        ),
-        1 => PieChartSectionData(
-          color: Colors.orange,
-          value: 30,
-          title: '30%',
-          radius: 50.0,
-          titleStyle: TextStyle(
-            fontSize: 16.0,
-            fontWeight: FontWeight.bold,
-            shadows: shadows,
-          ),
-        ),
-        2 => PieChartSectionData(
-          color: Colors.purple,
-          value: 15,
-          title: '15%',
-          radius: 50.0,
-          titleStyle: TextStyle(
-            fontSize: 16.0,
-            fontWeight: FontWeight.bold,
-            shadows: shadows,
-          ),
-        ),
-        3 => PieChartSectionData(
-          color: Colors.green,
-          value: 15,
-          title: '15%',
-          radius: 50.0,
-          titleStyle: TextStyle(
-            fontSize: 16.0,
-            fontWeight: FontWeight.bold,
-            shadows: shadows,
-          ),
-        ),
-        _ => throw StateError('Invalid'),
-      };
-    });
-  }
 }
 
-class Indicator extends StatelessWidget {
-  const Indicator({
-    super.key,
-    required this.color,
-    required this.text,
-    required this.isSquare,
-    this.size = 16,
-    this.textColor,
-  });
-  final Color color;
-  final String text;
-  final bool isSquare;
-  final double size;
-  final Color? textColor;
+class BarChartSample extends StatelessWidget {
+  final List<double> data;
+
+  const BarChartSample({super.key, required this.data});
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: <Widget>[
-        Container(
-          width: size,
-          height: size,
-          decoration: BoxDecoration(
-            shape: isSquare ? BoxShape.rectangle : BoxShape.circle,
-            color: color,
-          ),
-        ),
-        const SizedBox(width: 4),
-        Text(
-          text,
-          style: TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.bold,
-            color: textColor,
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-class BarChartSample extends StatefulWidget {
-  const BarChartSample({super.key});
-
-  @override
-  State<BarChartSample> createState() => _BarChartSampleState();
-}
-
-class _BarChartSampleState extends State<BarChartSample> {
-  List<BarChartGroupData> get barGroups =>
-      [2, 4, 6, 8, 10, 12, 14].asMap().entries.map((entry) {
-        int i = entry.key;
-        int value = entry.value;
-        return BarChartGroupData(
-          x: i,
-          barRods: [
-            BarChartRodData(
-              toY: value.toDouble(),
-              color: Colors.black,
-              width: 20,
-              borderRadius: BorderRadius.circular(0),
-            ),
-          ],
-        );
-      }).toList();
-
-  @override
-  Widget build(BuildContext context) {
-    return AspectRatio(
-      aspectRatio: 1.6,
+    return SizedBox(
+      height: 150,
       child: BarChart(
-        duration: Duration(milliseconds: 100),
-        curve: Curves.easeOutQuad,
         BarChartData(
-          titlesData: const FlTitlesData(show: false),
-          borderData: FlBorderData(show: false),
-          barGroups: barGroups,
-          gridData: const FlGridData(show: false),
-          alignment: BarChartAlignment.spaceAround,
-          maxY: 15,
+          maxY: 100,
+          gridData: const FlGridData(
+            horizontalInterval: 20,
+            drawVerticalLine: false,
+          ),
+          titlesData: FlTitlesData(
+            leftTitles: AxisTitles(
+              sideTitles: SideTitles(
+                showTitles: true,
+                reservedSize: 30,
+                getTitlesWidget: (value, meta) {
+                  return Text('${value.toInt()}%').small;
+                },
+              ),
+            ),
+            bottomTitles: AxisTitles(
+              sideTitles: SideTitles(
+                showTitles: true,
+                reservedSize: 30,
+                getTitlesWidget: (value, meta) {
+                  const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'];
+                  return Text(months[value.toInt()]).small;
+                },
+              ),
+            ),
+            topTitles: const AxisTitles(
+              sideTitles: SideTitles(showTitles: false),
+            ),
+            rightTitles: const AxisTitles(
+              sideTitles: SideTitles(showTitles: false),
+            ),
+          ),
+          barGroups: data.asMap().entries.map((entry) {
+            final index = entry.key;
+            final value = entry.value;
+            return BarChartGroupData(
+              x: index,
+              barRods: [
+                BarChartRodData(
+                  toY: value,
+                  color: Theme.of(context).colorScheme.primary,
+                  width: 20,
+                  borderRadius: BorderRadius.circular(4),
+                ),
+              ],
+            );
+          }).toList(),
         ),
       ),
     );

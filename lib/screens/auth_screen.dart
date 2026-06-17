@@ -4,10 +4,10 @@ class AuthScreen extends StatefulWidget {
   const AuthScreen({super.key});
 
   @override
-  State<AuthScreen> createState() => _SignInScreenState();
+  State<AuthScreen> createState() => _AuthScreenState();
 }
 
-class _SignInScreenState extends State<AuthScreen> {
+class _AuthScreenState extends State<AuthScreen> {
   bool showRegisterPage = false;
 
   @override
@@ -16,15 +16,16 @@ class _SignInScreenState extends State<AuthScreen> {
       child: SafeArea(
         child: Center(
           child: ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: 460),
+            constraints: const BoxConstraints(maxWidth: 420),
             child: Padding(
               padding: const EdgeInsets.all(24),
               child: Column(
                 children: [
                   const LogoSection(),
-                  const SizedBox(height: 40),
-                  showRegisterPage ? const RegisterCard() : const LoginCard(),
-                  const SizedBox(height: 24),
+                  const SizedBox(height: 16),
+                  const Text('E-commerce Suite Management').muted,
+                  const SizedBox(height: 16),
+                  showRegisterPage ? const SignUpCard() : const SignInCard(),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -32,8 +33,7 @@ class _SignInScreenState extends State<AuthScreen> {
                         showRegisterPage
                             ? "Already have an account? "
                             : "Don't have an account? ",
-                        style: TextStyle(color: Colors.gray.shade500),
-                      ),
+                      ).small.muted,
                       TextButton(
                         onPressed: () {
                           setState(() {
@@ -41,7 +41,7 @@ class _SignInScreenState extends State<AuthScreen> {
                           });
                         },
                         child: Text(
-                          showRegisterPage ? "Sign In" : "Create an account",
+                          showRegisterPage ? 'Sign In' : 'Create an account',
                         ),
                       ),
                     ],
@@ -61,79 +61,188 @@ class LogoSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Container(
-          width: 64,
-          height: 64,
-          decoration: BoxDecoration(
-            color: Colors.purple,
-            borderRadius: BorderRadius.circular(18),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.purple.withValues(alpha: 0.5),
-                blurRadius: 20,
-              ),
-            ],
-          ),
-          child: const Center(
-            child: Text(
-              "E",
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 28,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
-        ),
+    final theme = Theme.of(context);
+    final color = theme.colorScheme.primary;
 
-        const SizedBox(height: 20),
-
-        const Text(
-          "E-commerce",
-          style: TextStyle(
+    return Container(
+      width: 64,
+      height: 64,
+      decoration: BoxDecoration(
+        color: color,
+        borderRadius: BorderRadius.circular(18),
+        boxShadow: [
+          BoxShadow(color: color.withValues(alpha: 0.5), blurRadius: 20),
+        ],
+      ),
+      child: Stack(
+        alignment: Alignment.center,
+        children: [
+          const Icon(
+            Icons.shopping_bag_outlined,
+            size: 48,
             color: Colors.white,
-            fontSize: 36,
-            fontWeight: FontWeight.bold,
           ),
-        ),
-
-        const SizedBox(height: 8),
-
-        Text(
-          "E-commerce Suite Management",
-          style: TextStyle(color: Colors.gray.shade500),
-        ),
-      ],
+          const Icon(Icons.check, color: Colors.white, size: 20),
+        ],
+      ),
     );
   }
 }
 
-class LoginCard extends StatefulWidget {
-  const LoginCard({super.key});
+class SignInCard extends StatefulWidget {
+  const SignInCard({super.key});
 
   @override
-  State<LoginCard> createState() => _LoginCardState();
+  State<SignInCard> createState() => _SignInCardState();
 }
 
-class _LoginCardState extends State<LoginCard> {
+class _SignInCardState extends State<SignInCard> {
+  final _formKey = GlobalKey<FormState>();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      child: Form(
+        key: _formKey,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            const Text('Sign In').large.semiBold,
+            const Text(
+              'Enter your credentials to access your dashboard.',
+            ).small.muted,
+
+            const SizedBox(height: 16),
+
+            CustomFormField(
+              controller: _emailController,
+              label: 'Email Address',
+              placeholder: 'name@company.com',
+              icon: Icons.email,
+            ),
+
+            const SizedBox(height: 16),
+
+            CustomFormField(
+              controller: _passwordController,
+              label: 'Password',
+              placeholder: '********',
+              icon: Icons.lock,
+              isPassword: true,
+              showForgotPassword: true,
+            ),
+
+            const SizedBox(height: 16),
+
+            PrimaryButton(
+              onPressed: () {},
+              alignment: Alignment.center,
+              child: const Text('Sign In'),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class SignUpCard extends StatefulWidget {
+  const SignUpCard({super.key});
+
+  @override
+  State<SignUpCard> createState() => _SignUpCardState();
+}
+
+class _SignUpCardState extends State<SignUpCard> {
+  final _formKey = GlobalKey<FormState>();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _fullnameController = TextEditingController();
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      child: Form(
+        key: _formKey,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            const Text('Sign Up').large.semiBold,
+            const Text('Start managing your inventory and sales today.').muted,
+
+            const SizedBox(height: 16),
+
+            CustomFormField(
+              controller: _fullnameController,
+              label: 'Full Name',
+              placeholder: 'John Doe',
+              icon: Icons.person,
+            ),
+
+            const SizedBox(height: 16),
+
+            CustomFormField(
+              controller: _emailController,
+              label: 'Email Address',
+              placeholder: 'name@company.com',
+              icon: Icons.email,
+            ),
+
+            const SizedBox(height: 16),
+
+            CustomFormField(
+              controller: _passwordController,
+              label: 'Password',
+              placeholder: '********',
+              icon: Icons.lock,
+              isPassword: true,
+            ),
+
+            const SizedBox(height: 16),
+
+            PrimaryButton(
+              onPressed: () {},
+              alignment: Alignment.center,
+              child: const Text('Sign Up'),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class ForgotPasswordCard extends StatefulWidget {
+  const ForgotPasswordCard({super.key});
+
+  @override
+  State<ForgotPasswordCard> createState() => _ForgotPasswordCardState();
+}
+
+class _ForgotPasswordCardState extends State<ForgotPasswordCard> {
+  final TextEditingController _emailController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Card(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          const Text("Sign In").bold.large,
-          const Text("Enter you credentials to access your dashboard."),
+          const Text('Forgot Password').large.semiBold,
+          const Text(
+            'Enter your email address and you will receive a link to reset your password.',
+          ).muted,
 
           const SizedBox(height: 16),
 
           FormField(
             key: FormKey(#email),
-            label: const Text("Email Address"),
+            label: const Text('Email Address'),
             child: TextField(
-              placeholder: const Text("name@company.com"),
+              controller: _emailController,
+              placeholder: const Text('name@company.com'),
               features: [
                 InputFeature.leading(Icon(Icons.email)),
                 InputFeature.clear(
@@ -145,26 +254,13 @@ class _LoginCardState extends State<LoginCard> {
               ],
             ),
           ),
+
           const SizedBox(height: 16),
-          FormField(
-            key: FormKey(#password),
-            label: const Text("Password"),
-            child: TextField(
-              placeholder: const Text("Password"),
-              features: [
-                InputFeature.leading(Icon(Icons.lock)),
-                InputFeature.clear(
-                  visibility: InputFeatureVisibility.textNotEmpty,
-                ),
-                InputFeature.passwordToggle(mode: PasswordPeekMode.toggle),
-              ],
-            ),
-          ),
-          const SizedBox(height: 16),
+
           PrimaryButton(
             onPressed: () {},
             alignment: Alignment.center,
-            child: const Text("Sign In"),
+            child: const Text('Send Reset Link'),
           ),
         ],
       ),
@@ -172,79 +268,51 @@ class _LoginCardState extends State<LoginCard> {
   }
 }
 
-class RegisterCard extends StatefulWidget {
-  const RegisterCard({super.key});
+class CustomFormField extends StatelessWidget {
+  final String label;
+  final String placeholder;
+  final TextEditingController controller;
+  final IconData icon;
+  final bool isPassword;
+  final bool showForgotPassword;
 
-  @override
-  State<RegisterCard> createState() => _RegisterCardState();
-}
+  const CustomFormField({
+    super.key,
+    required this.label,
+    required this.placeholder,
+    required this.controller,
+    required this.icon,
+    this.isPassword = false,
+    this.showForgotPassword = false,
+  });
 
-class _RegisterCardState extends State<RegisterCard> {
   @override
   Widget build(BuildContext context) {
-    return Card(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          const Text("Sign In").bold.large,
-          const Text("Enter you credentials to access your dashboard."),
-
-          const SizedBox(height: 16),
-
-          FormField(
-            key: FormKey(#username),
-            label: const Text("Username"),
-            child: TextField(
-              placeholder: const Text("name@company.com"),
-              features: [
-                InputFeature.leading(Icon(Icons.person)),
-                InputFeature.clear(
-                  visibility:
-                      (InputFeatureVisibility.textNotEmpty &
-                          InputFeatureVisibility.focused) |
-                      InputFeatureVisibility.hovered,
-                ),
-              ],
-            ),
+    return FormField(
+      key: FormKey(UniqueKey()),
+      label: Text(label),
+      trailingLabel: showForgotPassword
+          ? TextButton(
+              onPressed: () {},
+              density: ButtonDensity.iconDense,
+              size: ButtonSize.small,
+              child: const Text('Forgot Password'),
+            )
+          : null,
+      child: TextField(
+        controller: controller,
+        placeholder: Text(placeholder),
+        obscureText: isPassword,
+        features: [
+          InputFeature.leading(Icon(icon)),
+          InputFeature.clear(
+            visibility:
+                (InputFeatureVisibility.textNotEmpty &
+                    InputFeatureVisibility.focused) |
+                InputFeatureVisibility.hovered,
           ),
-          const SizedBox(height: 16),
-          FormField(
-            key: FormKey(#email),
-            label: const Text("Email Address"),
-            child: TextField(
-              placeholder: const Text("name@company.com"),
-              features: [
-                InputFeature.leading(Icon(Icons.email)),
-                InputFeature.clear(
-                  visibility:
-                      (InputFeatureVisibility.textNotEmpty &
-                          InputFeatureVisibility.focused) |
-                      InputFeatureVisibility.hovered,
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(height: 16),
-          FormField(
-            key: FormKey(#password),
-            label: const Text("Password"),
-            child: TextField(
-              placeholder: const Text("Password"),
-              features: [
-                InputFeature.leading(Icon(Icons.lock)),
-                InputFeature.clear(
-                  visibility: InputFeatureVisibility.textNotEmpty,
-                ),
-                InputFeature.passwordToggle(mode: PasswordPeekMode.toggle),
-              ],
-            ),
-          ),
-          const SizedBox(height: 16),
-          PrimaryButton(
-            onPressed: () {},
-            alignment: Alignment.center,
-            child: const Text("Sign Up"),
-          ),
+          if (isPassword)
+            InputFeature.passwordToggle(mode: PasswordPeekMode.toggle),
         ],
       ),
     );
