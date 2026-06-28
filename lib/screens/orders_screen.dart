@@ -1,3 +1,5 @@
+import 'package:flutter_ecommerce/shared/dashboard_layout.dart';
+import 'package:flutter_ecommerce/widgets/badge.dart';
 import 'package:shadcn_flutter/shadcn_flutter.dart';
 
 class Orders {
@@ -94,6 +96,10 @@ class _OrdersScreenState extends State<OrdersScreen> {
 
   @override
   Widget build(BuildContext context) {
+    return DashboardLayout(title: 'Orders', child: _buildContent());
+  }
+
+  Widget _buildContent() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       spacing: 16,
@@ -174,7 +180,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
                                     padding: const EdgeInsets.all(8),
                                     alignment: Alignment.centerLeft,
                                     child: Badge(
-                                      child: order.paymentStatus.name,
+                                      label: order.paymentStatus.name,
                                       color: order.paymentColor,
                                     ),
                                   ),
@@ -184,7 +190,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
                                     padding: const EdgeInsets.all(8),
                                     alignment: Alignment.centerLeft,
                                     child: Badge(
-                                      child: order.fulfillment.name,
+                                      label: order.fulfillment.name,
                                       color: order.fulfillmentColor,
                                     ),
                                   ),
@@ -251,25 +257,6 @@ class _OrdersScreenState extends State<OrdersScreen> {
         alignment: alignRight ? Alignment.centerRight : null,
         child: Text(text),
       ),
-    );
-  }
-}
-
-class Badge extends StatelessWidget {
-  final String child;
-  final Color color;
-
-  const Badge({super.key, required this.child, required this.color});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        color: color,
-        borderRadius: BorderRadius.circular(4),
-      ),
-      padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
-      child: Text(child, style: TextStyle(color: Colors.white)).xSmall,
     );
   }
 }

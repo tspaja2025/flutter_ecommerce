@@ -1,3 +1,5 @@
+import 'package:flutter_ecommerce/shared/dashboard_layout.dart';
+import 'package:flutter_ecommerce/widgets/badge.dart';
 import 'package:shadcn_flutter/shadcn_flutter.dart';
 
 class Inventory {
@@ -91,6 +93,10 @@ class _InventoryScreenState extends State<InventoryScreen> {
 
   @override
   Widget build(BuildContext context) {
+    return DashboardLayout(title: 'Inventory', child: _buildContent());
+  }
+
+  Widget _buildContent() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       spacing: 16,
@@ -317,39 +323,6 @@ class _InventoryScreenState extends State<InventoryScreen> {
         padding: const EdgeInsets.all(8),
         alignment: alignRight ? Alignment.centerRight : null,
         child: Text(text),
-      ),
-    );
-  }
-}
-
-class Badge extends StatelessWidget {
-  final String label;
-  final Color color;
-  final bool outlined;
-
-  const Badge({
-    super.key,
-    required this.label,
-    required this.color,
-    this.outlined = false,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        color: outlined ? null : color.withValues(alpha: 0.8),
-        border: outlined ? Border.all(color: color) : null,
-        borderRadius: BorderRadius.circular(4),
-      ),
-      padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
-      child: Text(
-        label,
-        style: TextStyle(
-          color: outlined ? color : Colors.white,
-          fontSize: 12,
-          fontWeight: FontWeight.w500,
-        ),
       ),
     );
   }

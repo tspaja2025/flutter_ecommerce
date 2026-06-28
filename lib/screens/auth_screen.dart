@@ -1,3 +1,5 @@
+import 'package:flutter_ecommerce/widgets/custom_form_field.dart';
+import 'package:go_router/go_router.dart';
 import 'package:shadcn_flutter/shadcn_flutter.dart';
 
 class AuthScreen extends StatefulWidget {
@@ -137,7 +139,11 @@ class _SignInCardState extends State<SignInCard> {
             const SizedBox(height: 16),
 
             PrimaryButton(
-              onPressed: () {},
+              onPressed: () {
+                if (context.mounted) {
+                  context.go('/dashboard');
+                }
+              },
               alignment: Alignment.center,
               child: const Text('Sign In'),
             ),
@@ -262,57 +268,6 @@ class _ForgotPasswordCardState extends State<ForgotPasswordCard> {
             alignment: Alignment.center,
             child: const Text('Send Reset Link'),
           ),
-        ],
-      ),
-    );
-  }
-}
-
-class CustomFormField extends StatelessWidget {
-  final String label;
-  final String placeholder;
-  final TextEditingController controller;
-  final IconData icon;
-  final bool isPassword;
-  final bool showForgotPassword;
-
-  const CustomFormField({
-    super.key,
-    required this.label,
-    required this.placeholder,
-    required this.controller,
-    required this.icon,
-    this.isPassword = false,
-    this.showForgotPassword = false,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return FormField(
-      key: FormKey(UniqueKey()),
-      label: Text(label),
-      trailingLabel: showForgotPassword
-          ? TextButton(
-              onPressed: () {},
-              density: ButtonDensity.iconDense,
-              size: ButtonSize.small,
-              child: const Text('Forgot Password'),
-            )
-          : null,
-      child: TextField(
-        controller: controller,
-        placeholder: Text(placeholder),
-        obscureText: isPassword,
-        features: [
-          InputFeature.leading(Icon(icon)),
-          InputFeature.clear(
-            visibility:
-                (InputFeatureVisibility.textNotEmpty &
-                    InputFeatureVisibility.focused) |
-                InputFeatureVisibility.hovered,
-          ),
-          if (isPassword)
-            InputFeature.passwordToggle(mode: PasswordPeekMode.toggle),
         ],
       ),
     );

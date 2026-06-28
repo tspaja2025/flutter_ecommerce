@@ -1,4 +1,6 @@
-import 'package:fl_chart/fl_chart.dart';
+import 'package:flutter_ecommerce/shared/dashboard_layout.dart';
+import 'package:flutter_ecommerce/widgets/bar_chart_sample2.dart';
+import 'package:flutter_ecommerce/widgets/pie_chart_sample.dart';
 import 'package:shadcn_flutter/shadcn_flutter.dart';
 
 class Customers {
@@ -80,6 +82,10 @@ class _CustomersScreenState extends State<CustomersScreen> {
 
   @override
   Widget build(BuildContext context) {
+    return DashboardLayout(title: 'Customers', child: _buildContent());
+  }
+
+  Widget _buildContent() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       spacing: 16,
@@ -213,7 +219,7 @@ class _CustomersScreenState extends State<CustomersScreen> {
                       children: [
                         const Text("Retention Rate"),
                         const SizedBox(height: 8),
-                        BarChartSample(data: retentionData),
+                        BarChartSample2(data: retentionData),
                       ],
                     ),
                   ),
@@ -242,112 +248,6 @@ class _CustomersScreenState extends State<CustomersScreen> {
         padding: const EdgeInsets.all(8),
         alignment: alignRight ? Alignment.centerRight : null,
         child: Text(text),
-      ),
-    );
-  }
-}
-
-class PieChartSample extends StatelessWidget {
-  final Map<String, double> data;
-
-  const PieChartSample({super.key, required this.data});
-
-  @override
-  Widget build(BuildContext context) {
-    final colors = [
-      Theme.of(context).colorScheme.primary,
-      Colors.green,
-      Colors.orange,
-      Colors.red,
-    ];
-
-    return SizedBox(
-      height: 200,
-      child: PieChart(
-        PieChartData(
-          borderData: FlBorderData(show: false),
-          sectionsSpace: 2,
-          centerSpaceRadius: 40,
-          sections: data.entries.toList().asMap().entries.map((entry) {
-            final index = entry.key;
-            final entryData = entry.value;
-            return PieChartSectionData(
-              color: colors[index % colors.length],
-              value: entryData.value,
-              title: '${entryData.value.toInt()}%',
-              radius: 50,
-              titleStyle: const TextStyle(
-                fontSize: 12,
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-              ),
-            );
-          }).toList(),
-        ),
-      ),
-    );
-  }
-}
-
-class BarChartSample extends StatelessWidget {
-  final List<double> data;
-
-  const BarChartSample({super.key, required this.data});
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      height: 150,
-      child: BarChart(
-        BarChartData(
-          maxY: 100,
-          gridData: const FlGridData(
-            horizontalInterval: 20,
-            drawVerticalLine: false,
-          ),
-          titlesData: FlTitlesData(
-            leftTitles: AxisTitles(
-              sideTitles: SideTitles(
-                showTitles: true,
-                reservedSize: 30,
-                getTitlesWidget: (value, meta) {
-                  return Text('${value.toInt()}%').small;
-                },
-              ),
-            ),
-            bottomTitles: AxisTitles(
-              sideTitles: SideTitles(
-                showTitles: true,
-                reservedSize: 30,
-                getTitlesWidget: (value, meta) {
-                  const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'];
-                  return Text(months[value.toInt()]).small;
-                },
-              ),
-            ),
-            topTitles: const AxisTitles(
-              sideTitles: SideTitles(showTitles: false),
-            ),
-            rightTitles: const AxisTitles(
-              sideTitles: SideTitles(showTitles: false),
-            ),
-          ),
-          barGroups: data.asMap().entries.map((entry) {
-            final index = entry.key;
-            final value = entry.value;
-            return BarChartGroupData(
-              x: index,
-              barRods: [
-                BarChartRodData(
-                  toY: value,
-                  color: Theme.of(context).colorScheme.primary,
-                  width: 20,
-                  borderRadius: BorderRadius.circular(4),
-                ),
-              ],
-            );
-          }).toList(),
-        ),
       ),
     );
   }
