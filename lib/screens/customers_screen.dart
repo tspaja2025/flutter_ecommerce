@@ -86,149 +86,151 @@ class _CustomersScreenState extends State<CustomersScreen> {
   }
 
   Widget _buildContent() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      spacing: 16,
-      children: [
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text('Customer Insights').large.bold,
-            const Text(
-              'Manage and analyze your global customer base and lifetime value.',
-            ).muted,
-          ],
-        ),
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          spacing: 16,
-          children: [
-            Expanded(
-              flex: 2,
-              child: Column(
-                spacing: 16,
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  Card(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        SizedBox(
-                          width: double.infinity,
-                          child: TextField(
-                            placeholder: const Text('Search...'),
-                            features: [
-                              InputFeature.leading(
-                                StatedWidget.builder(
-                                  builder: (context, states) {
-                                    if (states.hovered) {
-                                      return const Icon(Icons.search);
-                                    } else {
-                                      return const Icon(
-                                        Icons.search,
-                                      ).iconMutedForeground();
-                                    }
-                                  },
+    return SingleChildScrollView(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        spacing: 16,
+        children: [
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text('Customer Insights').large.bold,
+              const Text(
+                'Manage and analyze your global customer base and lifetime value.',
+              ).muted,
+            ],
+          ),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            spacing: 16,
+            children: [
+              Expanded(
+                flex: 2,
+                child: Column(
+                  spacing: 16,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Card(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          SizedBox(
+                            width: double.infinity,
+                            child: TextField(
+                              placeholder: const Text('Search...'),
+                              features: [
+                                InputFeature.leading(
+                                  StatedWidget.builder(
+                                    builder: (context, states) {
+                                      if (states.hovered) {
+                                        return const Icon(Icons.search);
+                                      } else {
+                                        return const Icon(
+                                          Icons.search,
+                                        ).iconMutedForeground();
+                                      }
+                                    },
+                                  ),
+                                  visibility: InputFeatureVisibility.textEmpty,
                                 ),
-                                visibility: InputFeatureVisibility.textEmpty,
-                              ),
-                              InputFeature.clear(
-                                visibility:
-                                    (InputFeatureVisibility.textNotEmpty &
-                                        InputFeatureVisibility.focused) |
-                                    InputFeatureVisibility.hovered,
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Card(
-                    padding: const EdgeInsets.all(0),
-                    child: Column(
-                      children: [
-                        Table(
-                          rows: [
-                            // Header
-                            TableRow(
-                              cells: [
-                                buildHeaderCell('Customer'),
-                                buildHeaderCell('Email'),
-                                buildHeaderCell('Total Spent'),
-                                buildHeaderCell('Orders'),
-                                buildHeaderCell('Last Purchase', true),
+                                InputFeature.clear(
+                                  visibility:
+                                      (InputFeatureVisibility.textNotEmpty &
+                                          InputFeatureVisibility.focused) |
+                                      InputFeatureVisibility.hovered,
+                                ),
                               ],
                             ),
-                            // Body
-                            for (final customer in CustomersData.customer)
+                          ),
+                        ],
+                      ),
+                    ),
+                    Card(
+                      padding: const EdgeInsets.all(0),
+                      child: Column(
+                        children: [
+                          Table(
+                            rows: [
+                              // Header
                               TableRow(
                                 cells: [
-                                  buildCell(customer.name),
-                                  buildCell(customer.email),
-                                  buildCell(customer.formattedTotal),
-                                  buildCell(customer.formattedOrders),
-                                  buildCell(customer.lastPurchase),
+                                  buildHeaderCell('Customer'),
+                                  buildHeaderCell('Email'),
+                                  buildHeaderCell('Total Spent'),
+                                  buildHeaderCell('Orders'),
+                                  buildHeaderCell('Last Purchase', true),
                                 ],
                               ),
-                          ],
-                        ),
-                        Container(
-                          padding: const EdgeInsets.all(16),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              Pagination(
-                                showLabel: false,
-                                page: page,
-                                totalPages: 12,
-                                onPageChanged: (value) {
-                                  setState(() {
-                                    page = value;
-                                  });
-                                },
-                                maxPages: 3,
-                              ),
+                              // Body
+                              for (final customer in CustomersData.customer)
+                                TableRow(
+                                  cells: [
+                                    buildCell(customer.name),
+                                    buildCell(customer.email),
+                                    buildCell(customer.formattedTotal),
+                                    buildCell(customer.formattedOrders),
+                                    buildCell(customer.lastPurchase),
+                                  ],
+                                ),
                             ],
                           ),
-                        ),
-                      ],
+                          Container(
+                            padding: const EdgeInsets.all(16),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                Pagination(
+                                  showLabel: false,
+                                  page: page,
+                                  totalPages: 12,
+                                  onPageChanged: (value) {
+                                    setState(() {
+                                      page = value;
+                                    });
+                                  },
+                                  maxPages: 3,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-            Expanded(
-              child: Column(
-                spacing: 16,
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  Card(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Text("Customer Acquisition"),
-                        const SizedBox(height: 8),
-                        PieChartSample(data: acquisitionData),
-                      ],
+              Expanded(
+                child: Column(
+                  spacing: 16,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Card(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text("Customer Acquisition"),
+                          const SizedBox(height: 8),
+                          PieChartSample(data: acquisitionData),
+                        ],
+                      ),
                     ),
-                  ),
-                  Card(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Text("Retention Rate"),
-                        const SizedBox(height: 8),
-                        BarChartSample2(data: retentionData),
-                      ],
+                    Card(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text("Retention Rate"),
+                          const SizedBox(height: 8),
+                          BarChartSample2(data: retentionData),
+                        ],
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-          ],
-        ),
-      ],
+            ],
+          ),
+        ],
+      ),
     );
   }
 

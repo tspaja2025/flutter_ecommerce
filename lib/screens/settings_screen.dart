@@ -1,3 +1,4 @@
+import 'package:flutter_ecommerce/shared/dashboard_layout.dart';
 import 'package:flutter_ecommerce/widgets/badge.dart';
 import 'package:flutter_ecommerce/widgets/custom_form_field.dart';
 import 'package:shadcn_flutter/shadcn_flutter.dart';
@@ -27,6 +28,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    return DashboardLayout(title: 'Settings', child: _buildContent());
+  }
+
+  Widget _buildContent() {
     return SingleChildScrollView(
       physics: const BouncingScrollPhysics(),
       child: Column(

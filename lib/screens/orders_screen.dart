@@ -100,143 +100,145 @@ class _OrdersScreenState extends State<OrdersScreen> {
   }
 
   Widget _buildContent() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      spacing: 16,
-      children: [
-        Row(
-          children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text('Orders Overview').large.bold,
-                const Text(
-                  'Manage and track your customer orders in real-time.',
-                ).muted,
-              ],
-            ),
-            const Spacer(),
-            PrimaryButton(
-              onPressed: () {},
-              leading: const Icon(Icons.add),
-              child: const Text('Create Order'),
-            ),
-          ],
-        ),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            TabList(
-              index: index,
-              onChanged: (value) {
-                setState(() {
-                  index = value;
-                });
-              },
-              children: const [
-                TabItem(child: Text('All Orders')),
-                TabItem(child: Text('Pending')),
-                TabItem(child: Text('Unfulfilled')),
-                TabItem(child: Text('Completed')),
-              ],
-            ),
-            const SizedBox(height: 16),
-            IndexedStack(
-              index: index,
-              children: [
-                Card(
-                  padding: const EdgeInsets.all(0),
-                  child: Column(
-                    children: [
-                      Table(
-                        columnWidths: {
-                          0: FixedTableSize(110),
-                          1: FixedTableSize(200),
-                          2: FixedTableSize(150),
-                          3: FixedTableSize(150),
-                        },
-                        rows: [
-                          // Header
-                          TableRow(
-                            cells: [
-                              buildHeaderCell('Order ID'),
-                              buildHeaderCell('Date'),
-                              buildHeaderCell('Customer Name'),
-                              buildHeaderCell('Payment Status'),
-                              buildHeaderCell('Fulfillment'),
-                              buildHeaderCell('Total'),
-                              buildHeaderCell('Action', true),
-                            ],
-                          ),
-                          // Body
-                          for (final order in OrdersData.orders)
+    return SingleChildScrollView(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        spacing: 16,
+        children: [
+          Row(
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text('Orders Overview').large.bold,
+                  const Text(
+                    'Manage and track your customer orders in real-time.',
+                  ).muted,
+                ],
+              ),
+              const Spacer(),
+              PrimaryButton(
+                onPressed: () {},
+                leading: const Icon(Icons.add),
+                child: const Text('Create Order'),
+              ),
+            ],
+          ),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              TabList(
+                index: index,
+                onChanged: (value) {
+                  setState(() {
+                    index = value;
+                  });
+                },
+                children: const [
+                  TabItem(child: Text('All Orders')),
+                  TabItem(child: Text('Pending')),
+                  TabItem(child: Text('Unfulfilled')),
+                  TabItem(child: Text('Completed')),
+                ],
+              ),
+              const SizedBox(height: 16),
+              IndexedStack(
+                index: index,
+                children: [
+                  Card(
+                    padding: const EdgeInsets.all(0),
+                    child: Column(
+                      children: [
+                        Table(
+                          columnWidths: {
+                            0: FixedTableSize(110),
+                            1: FixedTableSize(200),
+                            2: FixedTableSize(150),
+                            3: FixedTableSize(150),
+                          },
+                          rows: [
+                            // Header
                             TableRow(
                               cells: [
-                                buildCell(order.id),
-                                buildCell(order.date),
-                                buildCell(order.customer),
-                                TableCell(
-                                  child: Container(
-                                    padding: const EdgeInsets.all(8),
-                                    alignment: Alignment.centerLeft,
-                                    child: Badge(
-                                      label: order.paymentStatus.name,
-                                      color: order.paymentColor,
-                                    ),
-                                  ),
-                                ),
-                                TableCell(
-                                  child: Container(
-                                    padding: const EdgeInsets.all(8),
-                                    alignment: Alignment.centerLeft,
-                                    child: Badge(
-                                      label: order.fulfillment.name,
-                                      color: order.fulfillmentColor,
-                                    ),
-                                  ),
-                                ),
-                                buildCell('\$${order.total}'),
-                                TableCell(
-                                  child: Container(
-                                    padding: const EdgeInsets.all(8),
-                                    alignment: Alignment.centerRight,
-                                    child: IconButton.ghost(
-                                      onPressed: () {},
-                                      icon: const Icon(Icons.more_vert),
-                                    ),
-                                  ),
-                                ),
+                                buildHeaderCell('Order ID'),
+                                buildHeaderCell('Date'),
+                                buildHeaderCell('Customer Name'),
+                                buildHeaderCell('Payment Status'),
+                                buildHeaderCell('Fulfillment'),
+                                buildHeaderCell('Total'),
+                                buildHeaderCell('Action', true),
                               ],
                             ),
-                        ],
-                      ),
-                      Container(
-                        padding: const EdgeInsets.all(16),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            Pagination(
-                              showLabel: false,
-                              page: page,
-                              totalPages: 12,
-                              onPageChanged: (value) {
-                                setState(() {
-                                  page = value;
-                                });
-                              },
-                              maxPages: 3,
-                            ),
+                            // Body
+                            for (final order in OrdersData.orders)
+                              TableRow(
+                                cells: [
+                                  buildCell(order.id),
+                                  buildCell(order.date),
+                                  buildCell(order.customer),
+                                  TableCell(
+                                    child: Container(
+                                      padding: const EdgeInsets.all(8),
+                                      alignment: Alignment.centerLeft,
+                                      child: Badge(
+                                        label: order.paymentStatus.name,
+                                        color: order.paymentColor,
+                                      ),
+                                    ),
+                                  ),
+                                  TableCell(
+                                    child: Container(
+                                      padding: const EdgeInsets.all(8),
+                                      alignment: Alignment.centerLeft,
+                                      child: Badge(
+                                        label: order.fulfillment.name,
+                                        color: order.fulfillmentColor,
+                                      ),
+                                    ),
+                                  ),
+                                  buildCell('\$${order.total}'),
+                                  TableCell(
+                                    child: Container(
+                                      padding: const EdgeInsets.all(8),
+                                      alignment: Alignment.centerRight,
+                                      child: IconButton.ghost(
+                                        onPressed: () {},
+                                        icon: const Icon(Icons.more_vert),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
                           ],
                         ),
-                      ),
-                    ],
+                        Container(
+                          padding: const EdgeInsets.all(16),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              Pagination(
+                                showLabel: false,
+                                page: page,
+                                totalPages: 12,
+                                onPageChanged: (value) {
+                                  setState(() {
+                                    page = value;
+                                  });
+                                },
+                                maxPages: 3,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-              ],
-            ),
-          ],
-        ),
-      ],
+                ],
+              ),
+            ],
+          ),
+        ],
+      ),
     );
   }
 

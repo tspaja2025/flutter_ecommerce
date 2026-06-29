@@ -180,7 +180,9 @@ class _NavigationDrawerWidgetState extends State<NavigationDrawerWidget> {
                         MenuButton(
                           leading: const Icon(Icons.settings),
                           child: const Text('Settings'),
-                          onPressed: (ctx) {},
+                          onPressed: (ctx) {
+                            ctx.go('settings');
+                          },
                         ),
                         const MenuDivider(),
                         MenuButton(

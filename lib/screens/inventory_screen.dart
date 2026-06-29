@@ -97,128 +97,102 @@ class _InventoryScreenState extends State<InventoryScreen> {
   }
 
   Widget _buildContent() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      spacing: 16,
-      children: [
-        Row(
-          children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text('Product Inventory').large.bold,
-                const Text(
-                  'Manage your catalog, stock levels, and pricing details.',
-                ).muted,
-              ],
-            ),
-            const Spacer(),
-            PrimaryButton(
-              onPressed: () {},
-              leading: const Icon(Icons.add),
-              child: const Text('Add Product'),
-            ),
-          ],
-        ),
-        Row(
-          children: [
-            Expanded(
-              child: Card(
-                child: Row(
-                  spacing: 16,
-                  children: [
-                    SizedBox(
-                      width: 400,
-                      child: TextField(
-                        placeholder: const Text('Search...'),
-                        features: [
-                          InputFeature.leading(
-                            StatedWidget.builder(
-                              builder: (context, states) {
-                                if (states.hovered) {
-                                  return const Icon(Icons.search);
-                                } else {
-                                  return const Icon(
-                                    Icons.search,
-                                  ).iconMutedForeground();
-                                }
-                              },
-                            ),
-                            visibility: InputFeatureVisibility.textEmpty,
-                          ),
-                          InputFeature.clear(
-                            visibility:
-                                (InputFeatureVisibility.textNotEmpty &
-                                    InputFeatureVisibility.focused) |
-                                InputFeatureVisibility.hovered,
-                          ),
-                        ],
-                      ),
-                    ),
-                    const Spacer(),
-                    OutlineButton(
-                      onPressed: () {},
-                      child: const Text('All Categories'),
-                    ),
-                    OutlineButton(
-                      onPressed: () {},
-                      child: const Text('All Status'),
-                    ),
-                    OutlineButton(
-                      onPressed: () {},
-                      child: const Text('More Filters'),
-                    ),
-                    IconButton.outline(
-                      onPressed: () {},
-                      icon: const Icon(Icons.download_outlined),
-                    ),
-                  ],
-                ),
+    return SingleChildScrollView(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        spacing: 16,
+        children: [
+          Row(
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text('Product Inventory').large.bold,
+                  const Text(
+                    'Manage your catalog, stock levels, and pricing details.',
+                  ).muted,
+                ],
               ),
-            ),
-          ],
-        ),
-        Row(
-          children: [
-            Expanded(
-              child: Card(
-                padding: const EdgeInsets.all(0),
-                child: Column(
-                  children: [
-                    Table(
-                      columnWidths: {
-                        0: FixedTableSize(32),
-                        1: FixedTableSize(170),
-                      },
-                      rows: [
-                        // Header
-                        TableRow(
-                          cells: [
-                            TableCell(
-                              child: Container(
-                                padding: const EdgeInsets.all(8),
-                                alignment: Alignment.centerLeft,
-                                child: Checkbox(
-                                  state: _state,
-                                  onChanged: (value) {
-                                    setState(() {
-                                      _state = value;
-                                    });
-                                  },
-                                ),
+              const Spacer(),
+              PrimaryButton(
+                onPressed: () {},
+                leading: const Icon(Icons.add),
+                child: const Text('Add Product'),
+              ),
+            ],
+          ),
+          Row(
+            children: [
+              Expanded(
+                child: Card(
+                  child: Row(
+                    spacing: 16,
+                    children: [
+                      SizedBox(
+                        width: 400,
+                        child: TextField(
+                          placeholder: const Text('Search...'),
+                          features: [
+                            InputFeature.leading(
+                              StatedWidget.builder(
+                                builder: (context, states) {
+                                  if (states.hovered) {
+                                    return const Icon(Icons.search);
+                                  } else {
+                                    return const Icon(
+                                      Icons.search,
+                                    ).iconMutedForeground();
+                                  }
+                                },
                               ),
+                              visibility: InputFeatureVisibility.textEmpty,
                             ),
-                            buildHeaderCell('Product'),
-                            buildHeaderCell('Sku'),
-                            buildHeaderCell('Category'),
-                            buildHeaderCell('Price'),
-                            buildHeaderCell('Stock level'),
-                            buildHeaderCell('Status'),
-                            buildHeaderCell('Action', true),
+                            InputFeature.clear(
+                              visibility:
+                                  (InputFeatureVisibility.textNotEmpty &
+                                      InputFeatureVisibility.focused) |
+                                  InputFeatureVisibility.hovered,
+                            ),
                           ],
                         ),
-                        // Body
-                        for (final inventory in InventoryData.stock)
+                      ),
+                      const Spacer(),
+                      OutlineButton(
+                        onPressed: () {},
+                        child: const Text('All Categories'),
+                      ),
+                      OutlineButton(
+                        onPressed: () {},
+                        child: const Text('All Status'),
+                      ),
+                      OutlineButton(
+                        onPressed: () {},
+                        child: const Text('More Filters'),
+                      ),
+                      IconButton.outline(
+                        onPressed: () {},
+                        icon: const Icon(Icons.download_outlined),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+          Row(
+            children: [
+              Expanded(
+                child: Card(
+                  padding: const EdgeInsets.all(0),
+                  child: Column(
+                    children: [
+                      Table(
+                        columnWidths: {
+                          0: FixedTableSize(32),
+                          1: FixedTableSize(170),
+                        },
+                        rows: [
+                          // Header
                           TableRow(
                             cells: [
                               TableCell(
@@ -235,75 +209,103 @@ class _InventoryScreenState extends State<InventoryScreen> {
                                   ),
                                 ),
                               ),
-                              buildCell(inventory.product),
-                              buildCell(inventory.sku),
-                              buildCell(inventory.category),
-                              buildCell('\$${inventory.price}'),
-                              TableCell(
-                                child: Container(
-                                  padding: const EdgeInsets.all(8),
-                                  alignment: Alignment.centerLeft,
-                                  child: SizedBox(
-                                    width: double.infinity,
-                                    child: Progress(
-                                      progress: inventory.stockLevel,
-                                      min: 0,
-                                      max: 100,
+                              buildHeaderCell('Product'),
+                              buildHeaderCell('Sku'),
+                              buildHeaderCell('Category'),
+                              buildHeaderCell('Price'),
+                              buildHeaderCell('Stock level'),
+                              buildHeaderCell('Status'),
+                              buildHeaderCell('Action', true),
+                            ],
+                          ),
+                          // Body
+                          for (final inventory in InventoryData.stock)
+                            TableRow(
+                              cells: [
+                                TableCell(
+                                  child: Container(
+                                    padding: const EdgeInsets.all(8),
+                                    alignment: Alignment.centerLeft,
+                                    child: Checkbox(
+                                      state: _state,
+                                      onChanged: (value) {
+                                        setState(() {
+                                          _state = value;
+                                        });
+                                      },
+                                    ),
+                                  ),
+                                ),
+                                buildCell(inventory.product),
+                                buildCell(inventory.sku),
+                                buildCell(inventory.category),
+                                buildCell('\$${inventory.price}'),
+                                TableCell(
+                                  child: Container(
+                                    padding: const EdgeInsets.all(8),
+                                    alignment: Alignment.centerLeft,
+                                    child: SizedBox(
+                                      width: double.infinity,
+                                      child: Progress(
+                                        progress: inventory.stockLevel,
+                                        min: 0,
+                                        max: 100,
+                                        color: inventory.stockColor,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                TableCell(
+                                  child: Container(
+                                    padding: const EdgeInsets.all(8),
+                                    alignment: Alignment.centerLeft,
+                                    child: Badge(
+                                      label: inventory.stockStatus.name,
                                       color: inventory.stockColor,
                                     ),
                                   ),
                                 ),
-                              ),
-                              TableCell(
-                                child: Container(
-                                  padding: const EdgeInsets.all(8),
-                                  alignment: Alignment.centerLeft,
-                                  child: Badge(
-                                    label: inventory.stockStatus.name,
-                                    color: inventory.stockColor,
+                                TableCell(
+                                  child: Container(
+                                    padding: const EdgeInsets.all(8),
+                                    alignment: Alignment.centerRight,
+                                    child: IconButton.ghost(
+                                      onPressed: () {},
+                                      icon: const Icon(Icons.more_vert),
+                                    ),
                                   ),
                                 ),
-                              ),
-                              TableCell(
-                                child: Container(
-                                  padding: const EdgeInsets.all(8),
-                                  alignment: Alignment.centerRight,
-                                  child: IconButton.ghost(
-                                    onPressed: () {},
-                                    icon: const Icon(Icons.more_vert),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                      ],
-                    ),
-                    Container(
-                      padding: const EdgeInsets.all(16),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          Pagination(
-                            showLabel: false,
-                            page: page,
-                            totalPages: 12,
-                            onPageChanged: (value) {
-                              setState(() {
-                                page = value;
-                              });
-                            },
-                            maxPages: 3,
-                          ),
+                              ],
+                            ),
                         ],
                       ),
-                    ),
-                  ],
+                      Container(
+                        padding: const EdgeInsets.all(16),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            Pagination(
+                              showLabel: false,
+                              page: page,
+                              totalPages: 12,
+                              onPageChanged: (value) {
+                                setState(() {
+                                  page = value;
+                                });
+                              },
+                              maxPages: 3,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
-            ),
-          ],
-        ),
-      ],
+            ],
+          ),
+        ],
+      ),
     );
   }
 
